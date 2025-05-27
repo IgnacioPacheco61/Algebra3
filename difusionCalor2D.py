@@ -115,8 +115,8 @@ def error_rms(T_ref, T):
 
 # --------- Experimentos combinados ---------
 
-resoluciones_bajas = [20, 30, 50]
-resoluciones_altas = [70, 100, 500, 1000]
+resoluciones_bajas = [20, 30, 50, 70]
+resoluciones_altas = [100, 500, 1000]
 dt = 0.1
 alpha = 0.01
 pasos = 10
@@ -194,8 +194,9 @@ plt.show()
 plt.figure(figsize=(10,5))
 plt.plot(resoluciones_bajas, filtrar(errores_opt), 's-', label='Optimizado (Thomas)')
 plt.plot(resoluciones_bajas, filtrar(errores_gauss), 'd-', label='Gauss pivoteo parcial')
+plt.yscale('log')
 plt.xlabel('Tamaño de la cuadrícula (n x n)')
-plt.ylabel('Error RMS respecto a spsolve')
+plt.ylabel('Error RMS respecto a spsolve (escala log)')
 plt.title('Error numérico vs tamaño del sistema')
 plt.legend()
 plt.grid(True)
