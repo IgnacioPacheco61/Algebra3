@@ -115,8 +115,7 @@ def error_rms(T_ref, T):
 
 # --------- Experimentos combinados ---------
 
-resoluciones_bajas = [20, 30, 50, 70]
-resoluciones_altas = [100, 500, 1000]
+resoluciones = [10, 20, 30, 50, 70]
 dt = 0.1
 alpha = 0.01
 pasos = 10
@@ -130,7 +129,7 @@ errores_opt = []
 tiempos_directo = []
 
 print("Ejecutando métodos para resoluciones bajas (Gauss + Optimizado + Directo)\n")
-for res in resoluciones_bajas:
+for res in resoluciones:
     nx = ny = res
     print(f"Resolución {res}x{res}")
     T_ref, t_ref = simular(nx, ny, dt, alpha, pasos, metodo_solucion='directo')
@@ -158,21 +157,9 @@ for res in resoluciones_bajas:
         tiempos_opt.append(None)
         errores_opt.append(None)
 
-print("\nSolo spsolve para resoluciones altas (por eficiencia):\n")
-for res in resoluciones_altas:
-    nx = ny = res
-    print(f"Resolución {res}x{res}")
-    try:
-        T_ref, t_ref = simular(nx, ny, dt, alpha, pasos, metodo_solucion='directo')
-        tiempos_directo.append(t_ref)
-        print(f"  spsolve: {t_ref:.4f} s")
-    except Exception as e:
-        print(f"  Directo ERROR: {e}")
-        tiempos_directo.append(None)
 
 # Concatenar listas
-resoluciones_totales = resoluciones_bajas + resoluciones_altas
-
+resoluciones_totales = resoluciones
 # --- Graficar ---
 
 def filtrar(l):
@@ -180,8 +167,8 @@ def filtrar(l):
 
 plt.figure(figsize=(10,5))
 plt.plot(resoluciones_totales, filtrar(tiempos_directo), 'o-', label='spsolve (directo)')
-plt.plot(resoluciones_bajas, filtrar(tiempos_opt), 's-', label='Optimizado (Thomas)')
-plt.plot(resoluciones_bajas, filtrar(tiempos_gauss), 'd-', label='Gauss pivoteo parcial')
+plt.plot(resoluciones, filtrar(tiempos_opt), 's-', label='Optimizado (Thomas)')
+plt.plot(resoluciones, filtrar(tiempos_gauss), 'd-', label='Gauss pivoteo parcial')
 plt.yscale('log')
 plt.xlabel('Tamaño de la cuadrícula (n x n)')
 plt.ylabel('Tiempo promedio por paso [s] (escala log)')
@@ -192,8 +179,8 @@ plt.tight_layout()
 plt.show()
 
 plt.figure(figsize=(10,5))
-plt.plot(resoluciones_bajas, filtrar(errores_opt), 's-', label='Optimizado (Thomas)')
-plt.plot(resoluciones_bajas, filtrar(errores_gauss), 'd-', label='Gauss pivoteo parcial')
+plt.plot(resoluciones, filtrar(errores_opt), 's-', label='Optimizado (Thomas)')
+plt.plot(resoluciones, filtrar(errores_gauss), 'd-', label='Gauss pivoteo parcial')
 plt.yscale('log')
 plt.xlabel('Tamaño de la cuadrícula (n x n)')
 plt.ylabel('Error RMS respecto a spsolve (escala log)')
